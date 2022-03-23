@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search</title>
+    <style>
+         #box{
+          border: 1px solid gray;
+          display:grid;
+        grid-template-columns: repeat(3,33%);
+        grid-template-rows: repeat(10,450px);
+          padding: 2%;
+          
+      }
+      
+    </style>
+</head>
+<body>
+    <div id="nav"></div>
+    <!-- <div id="main">
+        <div id="side"></div>
+    <div id="box"></div>
+    </div> -->
+    <div id="box"></div>
+</body>
+</html>
+<script type="module">
+     import navbar from "./scripts/nav.js";
+    let navd=document.getElementById("nav");
+    navd.innerHTML=navbar();
+
+    // import sidebar from "./components/sidebar.js";
+    // let side=document.getElementById("side");
+    // side.innerHTML=sidebar();
+     
+ search()
+     async function search(){
+         try{
+            let inpd=JSON.parse(localStorage.getItem("name"));
+             console.log(inpd);
+            let res= await fetch(`https://newsapi.org/v2/everything?q=${inpd}&apiKey=051a9c7404ff44d7b422048aabf202a8`);
+             let data=await res.json();
+             console.log("data is",data);
+             display(data.articles)
+         }
+         catch(err){
+             console.log("error",err)
+         }
+     }
+     function display(data){
+       console.log(data);
+       data.forEach(({source:{id},description,content,publishedAt,author,title,urlToImage}) => {
+           let h1=document.createElement("h2");
+           h1.textContent=title;
+           let h3=document.createElement("img");
+           h3.src=urlToImage;
+           h3.style.height="200px";
+           h3.style.width="95%";
+           let h2=document.createElement("p");
+           h2.textContent=description;
+
+           let smallbox=document.createElement("div");
+           smallbox.style.border="1px solid gray";
+           let box=document.getElementById("box");
+           smallbox.append(h1,h3,h2);
+           let dt={data,description,content,publishedAt,author,title,urlToImage};
+           smallbox.addEventListener("click",function(){
+               showdetail(dt);
+           })
+           box.append(smallbox);
+       });
+   }
+</script>

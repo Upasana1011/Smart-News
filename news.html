@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>news</title>
+    <style>
+      #box{
+          border: 1px solid rgb(17, 17, 17);
+          width:100%;
+          padding: 2%;
+          
+      }
+      #main{
+        display:grid;
+        grid-template-columns: 18% 60%;
+    }
+    </style>
+</head>
+<body>
+    <div id="nav"></div>
+    <div id="main">
+        <div id="side"></div>
+    <div id="box"></div>
+    </div>
+</body>
+</html>
+<script type="module">
+     import navbar from "./scripts/nav.js";
+    let navd=document.getElementById("nav");
+    navd.innerHTML=navbar();
+    
+    import sidebar from "./components/sidebar.js";
+    let side=document.getElementById("side");
+    side.innerHTML=sidebar();
+
+    let newsd=JSON.parse(localStorage.getItem("clck"));
+    console.log(newsd);
+    let h1=document.createElement("h2");
+    h1.textContent=newsd.title;
+    let h2=document.createElement("h5");
+    h2.textContent=newsd.publishedAt;
+    let h3=document.createElement("p");
+    h3.textContent=newsd.content;
+    let h4=document.createElement("img");
+    h4.src=newsd.urlToImage;
+    h4.style.height="300px";
+    h4.style.width="90%";
+    let h5=document.createElement("h3");
+    h5.textContent=newsd.description;
+
+    let box=document.getElementById("box");
+    box.append(h1,h2,h4,h5,h3);
+
+</script>

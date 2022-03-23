@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Home</title>
+    <style>
+    #main{
+        display:grid;
+        grid-template-columns: 18% 60%;
+    }
+    #inp{
+        margin-left: 20%;
+        height:25px;
+        width:200px;
+    }
+    #small{
+        display:grid;
+        grid-template-columns: 30% 30% 30%;
+        grid-gap: 2%;
+    }
+    </style>
+
+</head>
+<body>
+    <div id="nav"></div><br/>
+    <input type="text" placeholder="search news" id="inp"/>
+    <button id="btn">Search</button><br/>
+    <div id="main">
+    <div id="side"></div>
+    <div id="box"></div>
+    </div>
+</body>
+</html>
+<script type="module">
+      import navbar from "./scripts/nav.js";
+    let navd=document.getElementById("nav");
+    navd.innerHTML=navbar();
+
+    import sidebar from "./components/sidebar.js";
+    let side=document.getElementById("side");
+    side.innerHTML=sidebar();
+    shownews();
+    // Your API key is: 051a9c7404ff44d7b422048aabf202a8 
+    let url=`https://newsapi.org/v2/everything?q=tesla&from=2021-11-13&sortBy=publishedAt&apiKey=051a9c7404ff44d7b422048aabf202a8`;
+    async function shownews(){
+        try{
+             let res= await fetch(`https://newsapi.org/v2/everything?q=tesla&apiKey=051a9c7404ff44d7b422048aabf202a8`);
+             let data=await res.json();
+             console.log("data is",data);
+             display(data.articles)
+        }
+        catch(err){
+            console.log("error",err)
+        }
+    }
+     let btn=document.getElementById("btn");
+     btn.addEventListener("click",function(){
+         let inp=document.getElementById("inp").value;
+             search(inp);
+     });
+   function display(data){
+       console.log(data);
+       data.forEach(({source:{id},description,content,publishedAt,author,title,urlToImage}) => {
+           let h1=document.createElement("h2");
+           h1.textContent=title;
+           let h3=document.createElement("img");
+           h3.src=urlToImage;
+           h3.style.height="200px";
+           h3.style.width="95%";
+           let h2=document.createElement("p");
+           h2.textContent=description;
+
+           let smallbox=document.createElement("div");
+           smallbox.setAttribute("id","small");
+           smallbox.style.border="1px solid gray";
+           let box=document.getElementById("box");
+           smallbox.append(h1,h2,h3);
+           let dt={data,description,content,publishedAt,author,title,urlToImage};
+           smallbox.addEventListener("click",function(){
+               showdetail(dt);
+           })
+           box.append(smallbox);
+       });
+   }
+   var showdetail=(data)=>{
+       console.log("here",data);
+       localStorage.setItem("clck",JSON.stringify(data));
+       window.open("news.html");
+
+   }
+   var search=(inp)=>{
+     console.log(inp);
+     localStorage.setItem("name",JSON.stringify(inp));
+     window.open("search.html");
+   }
+</script>
